@@ -10,10 +10,19 @@ exports.run = (projectName, path, util, logger, commit, cb) => {
                     resolve(csvRows);
                 });
         });
-    }).then((codeSmels) => {
-        commit.smells = codeSmels;
-    }).catch(() => {
+    }).then((codeSmells) => {
+        commit.smellsCount = codeSmells.length;
+        commit.smells = codeSmells;
+    }).catch((e) => {
         commit.smells = false;
-        logger.error('codeSmels', `Error processing the code smells for the commit ${commit.commit}`);
+        logger.log(e);
+        logger.log(`Error processing the code smells for the commit ${commit.commit}`);
     }).asCallback(cb);
 };
+
+exports.export = (projectName, path, commits, util, logger, cb) => {
+    const resultFileName = `${path}/${projectName}_result.json`;
+    util.writeObject(commits, resultFileName).then(() => {
+        return util.execPromise(`python3 ${__dirname}/chart.py ${resultFileName}`);
+    }).asCallback(cb);
+}
