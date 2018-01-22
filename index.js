@@ -1,6 +1,6 @@
 const csv = require('csvtojson');
 exports.run = (projectName, path, util, logger, commit, cb) => {
-    const command = `cd ${path}&&$HOME/pmd/bin/run.sh pmd  -d ./ -R ${__dirname}/pmdRuleSets/goodClass.and.long.method.xml -f csv| grep "java"`;
+    const command = `cd ${path}&&$HOME/pmd/bin/run.sh pmd  -d ./ -R ${__dirname}/pmdRuleSets/java-design.xml -f csv| grep "java"`;
     logger.log(`starting codesmells for ${commit.commit}`);
     util.execPromise(command).then(codeSmelsCsv => {
         return new Promise((resolve) => {
